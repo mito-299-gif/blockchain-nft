@@ -191,10 +191,9 @@ function getImageUrl(imageObj) {
 }
 
 // @ເບິ່ງຂໍ້ມູນ URL ຂອງ NFT ໃນ OpenSea ຫຼື Alchemy
-function getExternalUrl(url) {
-  function showLoading(show) {
-    document.getElementById("loading").style.display = show ? "block" : "none";
-  }
+
+function showLoading(show) {
+  document.getElementById("loading").style.display = show ? "block" : "none";
 }
 
 // @ແສດງຂໍ້ຄວາມສະຖານະໃນກ້ອງຮູບ
