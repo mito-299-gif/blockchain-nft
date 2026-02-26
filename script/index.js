@@ -17,8 +17,55 @@ let account = null,
 let myBadges = [];
 let lastUploadedUri = "";
 
+// @time token
+function setCookie(name, value, days) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie =
+    name +
+    "=" +
+    encodeURIComponent(value) +
+    "; expires=" +
+    expires +
+    "; path=/";
+}
+
+// @ເລຶ່ມສ້າງ token
+function getCookie(APIJWT) {
+  return document.cookie.split("; ").reduce((r, v) => {
+    const parts = v.split("=");
+    return parts[0] === APIJWT ? decodeURIComponent(parts[1]) : r;
+  }, "");
+}
+
+// @select token
+// function openCookieModal() {
+//   let token = getCookie("jwt");
+//   if (!token) {
+//     token = localStorage.getItem("jwt");
+//   }
+//   if (!token) {
+//     alert("No JWT found in cookies or localStorage.");
+//     return;
+//   }
+//   console.log("Current JWT:", token);
+// }
+
+// @ສ້າງ token
+function saveToCookie() {
+  setCookie("jwt", token, 7);
+  localStorage.setItem("jwt", token);
+}
+// @delete token
+function clearCookie() {
+  setCookie("jwt", "", -1);
+  localStorage.removeItem("jwt");
+}
+
+// @open modal ເພື່ອໃສ່ API JWT ຂອງ Pinata
 function openPinataModal() {
-  const saved = sessionStorage.getItem("jwt");
+  const saved = getCookie("jwt");
+  const pinataBtn = document.getElementById("pinataBtn");
+
   document.getElementById("jwtInput").value = saved || "";
   document.getElementById("pinataStatus").textContent = saved
     ? "✅ Pinata Connected!"
@@ -27,14 +74,17 @@ function openPinataModal() {
   document.getElementById("pinataModal").classList.add("open");
 }
 
+// @ປິດ modal
 function closePinataModal() {
   document.getElementById("pinataModal").classList.remove("open");
 }
 
+// @ປິດ modal ຂອງ Pinata
 function closePinataModalOutside(e) {
   if (e.target.id === "pinataModal") closePinataModal();
 }
 
+// @ບັນທຶກ API JWT ຂອງ Pinata
 function saveJWT() {
   const jwt = document.getElementById("jwtInput").value.trim();
   const statusEl = document.getElementById("pinataStatus");
@@ -43,7 +93,7 @@ function saveJWT() {
     statusEl.style.color = "#ef4444";
     return;
   }
-  sessionStorage.setItem("jwt", jwt);
+  setCookie("jwt", jwt, 7); // Save to cookie for 7 days
   statusEl.textContent = "✅ Pinata Connected!";
   statusEl.style.color = "#22c55e";
   document.getElementById("pinataBtn").textContent = "✅ Pinata Connected";
@@ -52,8 +102,9 @@ function saveJWT() {
   setTimeout(closePinataModal, 800);
 }
 
+// @delete API JWT ຂອງ Pinata
 function clearJWT() {
-  sessionStorage.removeItem("jwt");
+  clearCookie("jwt");
   document.getElementById("jwtInput").value = "";
   document.getElementById("pinataStatus").textContent = "Clear";
   document.getElementById("pinataStatus").style.color = "#888";
@@ -61,8 +112,9 @@ function clearJWT() {
   document.getElementById("pinataBtn").classList.remove("connected");
 }
 
+// @upload ແລະ ສ້າງ Metadata JSON ສຳລັບ Mint ໃນ Pinata ແລະ ຮັບ URL ກັບໄປ
 async function uploadAll() {
-  const JWT = sessionStorage.getItem("jwt");
+  const JWT = getCookie("jwt");
   if (!JWT) {
     toast("Connect Pinata API", "error");
     openPinataModal();
@@ -156,12 +208,14 @@ async function uploadAll() {
   }
 }
 
+// @copy URL
 function copyUri() {
   if (!lastUploadedUri) return;
   navigator.clipboard.writeText(lastUploadedUri);
   toast(" URL copied", "success");
 }
 
+// @connect wallet
 async function connectWallet() {
   if (!window.ethereum) {
     toast("install MetaMask", "error");
@@ -179,7 +233,7 @@ async function connectWallet() {
     document.getElementById("heroSection").style.display = "none";
     document.getElementById("appSection").style.display = "block";
 
-    if (sessionStorage.getItem("jwt")) {
+    if (getCookie("jwt")) {
       document.getElementById("pinataBtn").textContent = "✅ Pinata Connected";
       document.getElementById("pinataBtn").classList.add("connected");
     }
@@ -199,6 +253,7 @@ async function connectWallet() {
   }
 }
 
+// @load Badges
 async function loadBadges() {
   showStatus("loading");
   try {
@@ -243,6 +298,7 @@ async function loadBadges() {
   }
 }
 
+// @check ຖ້າ owner ແມ່ນຕົວເອງແລ້ວໃຫ້ສະແດງ Tab Mint
 async function checkOwner() {
   try {
     const ownerAddr = await contract.owner();
@@ -251,6 +307,7 @@ async function checkOwner() {
   } catch (e) {}
 }
 
+// @render Badges
 function renderBadges(badges) {
   const grid = document.getElementById("badgeGrid");
   grid.innerHTML = "";
@@ -277,6 +334,7 @@ function renderBadges(badges) {
   });
 }
 
+// @Mint Badge
 async function mintBadge() {
   const to = document.getElementById("mintTo").value.trim();
   const name = document.getElementById("mintName").value.trim();
@@ -327,6 +385,7 @@ async function mintBadge() {
   }
 }
 
+// @Modal
 function openModal(b) {
   document.getElementById("modalName").textContent = b.badgeName;
   document.getElementById("modalActivity").textContent = b.activity;
@@ -347,6 +406,7 @@ function closeModal(e) {
     document.getElementById("modal").classList.remove("open");
 }
 
+// @Switch Tab
 function switchTab(tab) {
   document.getElementById("tabMy").style.display =
     tab === "my" ? "block" : "none";
@@ -360,11 +420,13 @@ function switchTab(tab) {
   });
 }
 
+// @Helpers
 function fillPreset(name, activity) {
   document.getElementById("mintName").value = name;
   document.getElementById("mintActivity").value = activity;
 }
 
+// @Helpers
 function getBadgeEmoji(name = "") {
   const n = name.toLowerCase();
   if (n.includes("winner") || n.includes("hackathon")) return "🏆";
@@ -374,10 +436,12 @@ function getBadgeEmoji(name = "") {
   return "🎓";
 }
 
+// @ທີ່ຢູ່ wallet address
 function shortenAddr(addr) {
   return addr.slice(0, 6) + "..." + addr.slice(-4);
 }
 
+// @show status ໃນການດືງ NFT ຫຼື ຂໍ້ຜິດພາດ
 function showStatus(type, msg = "") {
   const el = document.getElementById("status");
   if (type === "loading") {
@@ -399,6 +463,7 @@ function showStatus(type, msg = "") {
   }
 }
 
+// @ທີ່ຢູ່ wallet address
 function setMintStatus(type, msg = "") {
   const el = document.getElementById("mintStatus");
   el.style.display = type ? "block" : "none";

@@ -1,6 +1,9 @@
+// @Chain ID
+// @contract address in deploy
 const LAB_CHAIN_ID = 5222;
 const LAB_CONTRACT_DEFAULT = "0xE76CAF6C344230f319D70f97F712a424E6b61B72";
 
+// @ຂໍ້ມູນ Network ທີ່ຮອງຮັບ ແລະ API Alchemy ສໍາລັບແຕ່ລະ Network
 const NETWORK_MAP = {
   1: { name: "Ethereum", alchemy: "eth-mainnet", os: "ethereum" },
   11155111: { name: "Sepolia", alchemy: "eth-sepolia", os: "sepolia" },
@@ -31,14 +34,60 @@ let currentAccount = null;
 let currentChainId = null;
 let allNFTs = [];
 
+// @time token
+function setCookie(name, value, days) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie =
+    name +
+    "=" +
+    encodeURIComponent(value) +
+    "; expires=" +
+    expires +
+    "; path=/";
+}
+
+// @ເລຶ່ມສ້າງ token
+function getCookie(APialchemyKey) {
+  return document.cookie.split("; ").reduce((r, v) => {
+    const parts = v.split("=");
+    return parts[0] === APialchemyKey ? decodeURIComponent(parts[1]) : r;
+  }, "");
+}
+
+// @select token
+// function opentoMadotoken() {
+//   let token = getCookie("alchemyKey");
+//   if (!token) {
+//     token = localStorage.getItem("alchemyKey");
+//   }
+//   if (!token) {
+//     alert("Please connect Alchemy Key first");
+//     return;
+//   }
+//   console.log("Alchemy Key:", token);
+// }
+
+// @ສ້າງ token
+function saveToCookie() {
+  setCookie("alchemyKey", token, 7);
+  localStorage.setItem("alchemyKey", token);
+}
+
+// @delete token
+function cleartoken(alchemyKey) {
+  setCookie(alchemyKey, "", -1);
+  localStorage.removeItem(alchemyKey);
+}
+
 function toChainNum(chainId) {
   if (chainId === null || chainId === undefined) return 0;
   if (typeof chainId === "number") return chainId;
   return parseInt(chainId, 16);
 }
 
+// @ເປີດ modal Alchemy
 function openAlchemyModal() {
-  const saved = sessionStorage.getItem("alchemyKey");
+  const saved = getCookie("alchemyKey");
   document.getElementById("alchemyInput").value = saved || "";
   const st = document.getElementById("alchemyStatus");
   st.textContent = saved ? "Save" : "";
@@ -46,14 +95,17 @@ function openAlchemyModal() {
   document.getElementById("alchemyModal").classList.add("open");
 }
 
+// @ປິດ modal Alchemy
 function closeAlchemyModal() {
   document.getElementById("alchemyModal").classList.remove("open");
 }
 
+// @ປິດ modal Alchemy ໂດຍການກົດນອກ modal
 function closeBgAlchemy(e) {
   if (e.target.id === "alchemyModal") closeAlchemyModal();
 }
 
+// @ບັນທຶກ API Key Alchemy
 function saveAlchemyKey() {
   const key = document.getElementById("alchemyInput").value.trim();
   const st = document.getElementById("alchemyStatus");
@@ -62,15 +114,16 @@ function saveAlchemyKey() {
     st.style.color = "#ef4444";
     return;
   }
-  sessionStorage.setItem("alchemyKey", key);
+  setCookie("alchemyKey", key, 7); // Save to cookie for 7 days
   st.textContent = "Saved!";
   st.style.color = "#22c55e";
   setAlchemyBtn(true);
   setTimeout(closeAlchemyModal, 700);
 }
 
+// @delete API Key Alchemy
 function clearAlchemyKey() {
-  sessionStorage.removeItem("alchemyKey");
+  cleartoken("alchemyKey");
   document.getElementById("alchemyInput").value = "";
   const st = document.getElementById("alchemyStatus");
   st.textContent = "Cleared";
@@ -78,6 +131,7 @@ function clearAlchemyKey() {
   setAlchemyBtn(false);
 }
 
+// @open connected Alchemy button
 function setAlchemyBtn(connected) {
   const btn = document.getElementById("alchemyBtn");
   btn.textContent = connected ? "Alchemy Connected" : "Connect Alchemy";
@@ -86,15 +140,18 @@ function setAlchemyBtn(connected) {
     : btn.classList.remove("connected");
 }
 
+// @ເບິ່ງ API Key Alchemy in input
 function getAlchemyKey() {
-  return sessionStorage.getItem("alchemyKey");
+  return getCookie("alchemyKey");
 }
 
+// @ເບິ່ງຂໍ້ມູນ Network
 function getNetworkInfo(chainId) {
   const num = toChainNum(chainId);
   return NETWORK_MAP[num] || { name: "Chain " + num, alchemy: null, os: null };
 }
 
+// @ເບິ່ງຂໍ້ມູນ Network
 function getAlchemyBase(chainId) {
   const key = getAlchemyKey();
   const info = getNetworkInfo(chainId);
@@ -102,23 +159,27 @@ function getAlchemyBase(chainId) {
   return "https://" + info.alchemy + ".g.alchemy.com/nft/v3/" + key;
 }
 
+// @update Network
 function updateNetworkUI(chainId) {
   const info = getNetworkInfo(chainId);
   document.getElementById("networkName").textContent = info.name;
   document.getElementById("statNetwork").textContent = info.name;
 }
 
+// @ເບິ່ງຂໍ້ມູນ Wallet
 function shortenAddr(addr) {
   if (!addr) return "Unknown";
   return addr.slice(0, 6) + "..." + addr.slice(-4);
 }
 
+// @ແປງ URL ipfs ເປັນ HTTP
 function ipfsToHttp(url) {
   if (!url) return null;
   if (url.startsWith("ipfs://")) return "https://ipfs.io/ipfs/" + url.slice(7);
   return url;
 }
 
+// @ເບິ່ງຂໍ້ມູນ URL ຂອງຮູບ
 function getImageUrl(imageObj) {
   if (!imageObj) return null;
   const url =
@@ -129,10 +190,14 @@ function getImageUrl(imageObj) {
   return ipfsToHttp(url);
 }
 
-function showLoading(show) {
-  document.getElementById("loading").style.display = show ? "block" : "none";
+// @ເບິ່ງຂໍ້ມູນ URL ຂອງ NFT ໃນ OpenSea ຫຼື Alchemy
+function getExternalUrl(url) {
+  function showLoading(show) {
+    document.getElementById("loading").style.display = show ? "block" : "none";
+  }
 }
 
+// @ແສດງຂໍ້ຄວາມສະຖານະໃນກ້ອງຮູບ
 function showStatus(msg, isErr = false) {
   const el = document.getElementById("status");
   el.textContent = msg;
@@ -141,6 +206,7 @@ function showStatus(msg, isErr = false) {
   el.style.whiteSpace = "pre-line";
 }
 
+// @ລ້າງ Grid ແລະ ປິດການເບິ່ງ NFT
 function clearGrid() {
   const grid = document.getElementById("nftGrid");
   grid.innerHTML = "";
@@ -148,6 +214,7 @@ function clearGrid() {
   document.getElementById("nftControls").style.display = "none";
 }
 
+// @connect Wallet ແລະ ຕິດຕໍ່ Event ຂອງ MetaMask
 async function connectWallet() {
   if (!window.ethereum) {
     document.getElementById("noMetamask").style.display = "block";
@@ -187,6 +254,7 @@ async function connectWallet() {
   }
 }
 
+// @ເບິ່ງຂໍ້ມູນ Wallet ແລະ ສະແດງ UI ຫຼັງຈາກ connect ແລ້ວ
 function onWalletConnected() {
   document.getElementById("heroSection").style.display = "none";
   document.getElementById("walletInfo").style.display = "block";
@@ -196,6 +264,7 @@ function onWalletConnected() {
   fetchNFTs(currentAccount, null, currentChainId);
 }
 
+// @ເບິ່ງຂໍ້ມູນ NFT ຂອງ Address ໃນ Network
 async function fetchNFTs(address, contractAddress, chainId) {
   if (chainId === undefined || chainId === null) chainId = currentChainId;
   showLoading(true);
@@ -264,6 +333,7 @@ async function fetchNFTs(address, contractAddress, chainId) {
   await fetchFromOpenSea(address, contractAddress, netInfo.os);
 }
 
+// @ເບິ່ງຂໍ້ມູນ NFT ຂອງ Address ໃນ Contract
 async function fetchFromContract() {
   const contractAddr = document.getElementById("contractInput").value.trim();
   if (!contractAddr || !contractAddr.startsWith("0x")) {
@@ -345,7 +415,7 @@ async function fetchFromLabChain(address, contractAddress) {
     );
   }
 }
-
+// @ເບິ່ງຂໍ້ມູນ NFT ຂອງ Address ໃນ Contract ໃນການຫາຂໍ້ມູນຈາກ input
 async function fetchFromOpenSea(address, contractAddress, osChain) {
   if (!osChain) {
     showLoading(false);
@@ -400,6 +470,7 @@ async function fetchFromOpenSea(address, contractAddress, osChain) {
   }
 }
 
+// @select NFT ແລະ ສະແດງໃນ Modal
 function renderGrid(nfts) {
   const grid = document.getElementById("nftGrid");
   const controls = document.getElementById("nftControls");
@@ -446,6 +517,7 @@ function renderGrid(nfts) {
   });
 }
 
+// @open NFT ໃນ Modal
 function openModal(nft) {
   document.getElementById("modalName").textContent = nft.name;
   document.getElementById("modalCollection").textContent = nft.collection;
