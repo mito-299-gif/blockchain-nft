@@ -88,13 +88,28 @@
                 <div class="modal-name" id="modalName"></div>
                 <div class="modal-collection" id="modalCollection"></div>
                 <div class="modal-desc" id="modalDesc"></div>
+
+                <div class="modal-verify">
+                    <h4>Verification</h4>
+
+                    <div class="modal-verify-row">
+                        <span class="vkey"> Contract Verified</span>
+                        <span id="modalVerified">loading...</span>
+                    </div>
+                    <div class="modal-verify-row">
+                        <span class="vkey"> Contract Address</span>
+                        <a id="modalEtherscan" href="#" target="_blank"
+                            style="color:#a78bfa; font-family:'Space Mono',monospace; font-size:0.72rem;">—</a>
+                    </div>
+
+                </div>
+
                 <div class="modal-attrs" id="modalAttrs"></div>
                 <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕
                     close</button>
             </div>
         </div>
     </div>
-
 
     <div id="alchemyModal" onclick="closeBgAlchemy(event)">
         <div class="alchemy-inner">

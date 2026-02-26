@@ -8,6 +8,8 @@
   --text: #e8e8f0;
   --muted: #6b6b80;
   --danger: #f43f5e;
+  --warning: #f59e0b;
+  --success: #10b981;
   --glow: 0 0 30px rgba(124, 58, 237, 0.3);
 }
 
@@ -51,12 +53,15 @@ body::before {
   z-index: 1;
 }
 
+/* ==============================
+   Header
+   ============================== */
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border);
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(10, 10, 15, 0.9);
   backdrop-filter: blur(20px);
   position: sticky;
@@ -64,35 +69,38 @@ header {
   z-index: 100;
 }
 
-.logo {
-  font-size: 1.4rem;
+header .logo {
+  font-family: "Syne", sans-serif;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 1.3rem;
+  color: #fff;
 }
 
-.logo span {
-  color: var(--accent);
+header .logo span {
+  color: #6366f1;
 }
 
 .network-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(6, 214, 160, 0.1);
-  border: 1px solid rgba(6, 214, 160, 0.3);
-  padding: 6px 14px;
-  border-radius: 100px;
-  font-family: "Noto Sans Lao";
-
-  font-size: 0.75rem;
-  color: var(--accent2);
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: "Space Mono", monospace;
+  font-size: 0.78rem;
+  color: #aaa;
+  cursor: default;
 }
 
 .network-badge .dot {
   width: 8px;
   height: 8px;
-  background: var(--accent2);
   border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  flex-shrink: 0;
   animation: pulse 2s infinite;
 }
 
@@ -102,13 +110,36 @@ header {
     opacity: 1;
     transform: scale(1);
   }
-
   50% {
     opacity: 0.5;
     transform: scale(0.8);
   }
 }
 
+#alchemyBtn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+#alchemyBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+#alchemyBtn.connected {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+/* ==============================
+   Hero
+   ============================== */
 .hero {
   text-align: center;
   padding: 5rem 2rem 3rem;
@@ -120,7 +151,6 @@ header {
     opacity: 0;
     transform: translateY(30px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -148,6 +178,630 @@ header {
   margin-bottom: 2.5rem;
   font-family: "Noto Sans Lao";
 }
+
+/* ==============================
+   Connect Button
+   ============================== */
+#connectBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: var(--glow);
+  letter-spacing: 0.02em;
+}
+
+#connectBtn:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.5);
+}
+#connectBtn:active {
+  transform: translateY(0);
+}
+#connectBtn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ==============================
+   Wallet Info
+   ============================== */
+#walletInfo {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin: 2rem auto;
+  max-width: 700px;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+#walletInfo .label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: "Noto Sans Lao";
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+#walletInfo .address {
+  font-family: "Noto Sans Lao";
+  font-size: 1rem;
+  color: var(--accent2);
+  word-break: break-all;
+}
+
+#walletInfo .stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+#walletInfo .stat .num {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text);
+}
+#walletInfo .stat .stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: "Noto Sans Lao";
+}
+
+/* ==============================
+   Contract Form
+   ============================== */
+#contractForm {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin: 1rem auto;
+  max-width: 700px;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+#contractForm h3 {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-family: "Noto Sans Lao";
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+#contractForm input {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: "Noto Sans Lao";
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#contractForm input:focus {
+  border-color: var(--accent);
+}
+#contractForm input::placeholder {
+  color: var(--muted);
+}
+
+#contractForm button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+#contractForm button:hover {
+  background: #6d28d9;
+}
+
+/* ==============================
+   NFT Controls & Grid
+   ============================== */
+#nftControls {
+  display: none;
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding: 0 2rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#nftControls .section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+#nftGrid {
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+  animation: fadeUp 0.6s ease forwards;
+}
+
+/* ==============================
+   NFT Card
+   ============================== */
+.nft-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+  animation: cardIn 0.5s ease backwards;
+}
+
+.nft-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 58, 237, 0.15);
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.nft-image-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.nft-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.nft-card:hover .nft-image-wrap img {
+  transform: scale(1.05);
+}
+
+.nft-no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: "Noto Sans Lao";
+  background: linear-gradient(135deg, #16161f, #1a1a28);
+}
+
+.nft-no-image .icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  opacity: 0.3;
+}
+
+.token-id-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-family: "Noto Sans Lao";
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ==============================
+   ✅ NEW: Suspicious overlay (HIGH RISK)
+   ============================== */
+.suspicious-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(244, 63, 94, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: white;
+  display: none;
+  z-index: 2;
+}
+
+.suspicious-overlay.show {
+  display: block;
+}
+
+/* ==============================
+   NFT Card Info
+   ============================== */
+.nft-info {
+  padding: 1rem 1.2rem;
+}
+
+.nft-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nft-collection {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-family: "Noto Sans Lao";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nft-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==============================
+   ✅ NEW: Verify Strip (bottom of card)
+   ============================== */
+.verify-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 1.2rem;
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Metadata type badge */
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: "Space Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.meta-badge.onchain {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--success);
+}
+
+.meta-badge.ipfs {
+  background: rgba(6, 214, 160, 0.1);
+  border: 1px solid rgba(6, 214, 160, 0.3);
+  color: var(--accent2);
+}
+
+.meta-badge.http {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--warning);
+}
+
+.meta-badge.unknown {
+  background: rgba(107, 107, 128, 0.15);
+  border: 1px solid rgba(107, 107, 128, 0.3);
+  color: var(--muted);
+}
+
+/* Verified contract badge */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: "Space Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.verified-badge.checking {
+  background: rgba(107, 107, 128, 0.15);
+  border: 1px solid rgba(107, 107, 128, 0.3);
+  color: var(--muted);
+}
+
+.verified-badge.verified {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--success);
+}
+
+.verified-badge.unverified {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: var(--danger);
+}
+
+/* Explorer link button */
+.etherscan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: "Space Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  color: #a78bfa;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.etherscan-btn:hover {
+  background: rgba(124, 58, 237, 0.25);
+  border-color: rgba(124, 58, 237, 0.6);
+  color: #c4b5fd;
+}
+
+/* ==============================
+   Loading / Status
+   ============================== */
+#loading {
+  display: none;
+  text-align: center;
+  padding: 4rem;
+  animation: fadeUp 0.3s ease forwards;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#loading p {
+  color: var(--muted);
+  font-family: "Noto Sans Lao";
+  font-size: 0.9rem;
+}
+
+#status {
+  text-align: center;
+  padding: 2rem;
+  font-family: "Noto Sans Lao";
+  font-size: 0.9rem;
+  color: var(--muted);
+  display: none;
+}
+
+#status.error {
+  color: var(--danger);
+}
+
+/* ==============================
+   Modal
+   ============================== */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+#modal.open {
+  display: flex;
+}
+
+.modal-inner {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  overflow: hidden;
+  animation: modalIn 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.modal-body {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.modal-name {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.modal-collection {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-family: "Noto Sans Lao";
+  margin-bottom: 1rem;
+}
+
+.modal-desc {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.attr-tag {
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-family: "Noto Sans Lao";
+}
+
+.attr-tag span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.65rem;
+  margin-bottom: 2px;
+}
+
+/* ==============================
+   ✅ NEW: Modal Verify Section
+   ============================== */
+.modal-verify {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-verify h4 {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.8rem;
+}
+
+.modal-verify-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.8rem;
+}
+
+.modal-verify-row:last-child {
+  border-bottom: none;
+}
+
+.modal-verify-row .vkey {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 0.72rem;
+}
+
+/* ==============================
+   Modal Close Button
+   ============================== */
+.modal-close {
+  background: var(--border);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  color: var(--text);
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--accent);
+}
+
+/* ==============================
+   Alchemy Modal
+   ============================== */
 #alchemyModal {
   display: none;
   position: fixed;
@@ -180,14 +834,12 @@ header {
   margin: 0;
   color: #fff;
 }
-
 .alchemy-inner p {
   font-size: 0.8rem;
   color: #888;
   margin: 0;
   line-height: 1.6;
 }
-
 .alchemy-inner a {
   color: #6366f1;
 }
@@ -235,7 +887,6 @@ header {
   background: #6366f1;
   color: #fff;
 }
-
 .btn-clear {
   background: rgba(255, 255, 255, 0.08);
   color: #ccc;
@@ -254,519 +905,9 @@ header {
   min-height: 1.1em;
 }
 
-.network-badge {
-  cursor: default;
-}
-
-#alchemyBtn.connected {
-  color: #22c55e !important;
-  border-color: #22c55e !important;
-}
-
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-header .logo {
-  font-family: "Syne", sans-serif;
-  font-weight: 800;
-  font-size: 1.3rem;
-  color: #fff;
-}
-
-header .logo span {
-  color: #6366f1;
-}
-
-.network-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  font-family: "Space Mono", monospace;
-  font-size: 0.78rem;
-  color: #aaa;
-}
-
-.network-badge .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 6px #22c55e;
-  flex-shrink: 0;
-}
-
-#alchemyBtn {
-  padding: 0.45rem 1.1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: #ccc;
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-#alchemyBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-#alchemyBtn.connected {
-  border-color: #22c55e;
-  color: #22c55e;
-}
-#connectBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 16px 40px;
-  font-size: 1.1rem;
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: var(--glow);
-  letter-spacing: 0.02em;
-}
-
-#connectBtn:hover {
-  background: #6d28d9;
-  transform: translateY(-2px);
-  box-shadow: 0 0 40px rgba(124, 58, 237, 0.5);
-}
-
-#connectBtn:active {
-  transform: translateY(0);
-}
-
-#connectBtn svg {
-  width: 24px;
-  height: 24px;
-}
-
-#walletInfo {
-  display: none;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin: 2rem auto;
-  max-width: 700px;
-  animation: fadeUp 0.5s ease forwards;
-}
-
-#walletInfo .label {
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-family: "Noto Sans Lao";
-
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 4px;
-}
-
-#walletInfo .address {
-  font-family: "Noto Sans Lao";
-
-  font-size: 1rem;
-  color: var(--accent2);
-  word-break: break-all;
-}
-
-#walletInfo .stats {
-  display: flex;
-  gap: 2rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-#walletInfo .stat .num {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--text);
-}
-
-#walletInfo .stat .stat-label {
-  font-size: 0.8rem;
-  color: var(--muted);
-  font-family: "Noto Sans Lao";
-}
-
-#contractForm {
-  display: none;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin: 1rem auto;
-  max-width: 700px;
-  animation: fadeUp 0.5s ease forwards;
-}
-
-#contractForm h3 {
-  font-size: 0.9rem;
-  color: var(--muted);
-  font-family: "Noto Sans Lao";
-
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
-}
-
-.input-row {
-  display: flex;
-  gap: 12px;
-}
-
-#contractForm input {
-  flex: 1;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  color: var(--text);
-  font-family: "Noto Sans Lao";
-
-  font-size: 0.85rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-#contractForm input:focus {
-  border-color: var(--accent);
-}
-
-#contractForm input::placeholder {
-  color: var(--muted);
-}
-
-#contractForm button {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-
-#contractForm button:hover {
-  background: #6d28d9;
-}
-
-#nftControls {
-  display: none;
-  max-width: 1200px;
-  margin: 0 auto 1.5rem;
-  padding: 0 2rem;
-  display: none;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#nftControls .section-title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-#nftGrid {
-  display: none;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem 4rem;
-  animation: fadeUp 0.6s ease forwards;
-}
-
-.nft-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s;
-  cursor: pointer;
-  animation: cardIn 0.5s ease backwards;
-}
-
-.nft-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 58, 237, 0.15);
-}
-
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.nft-image-wrap {
-  position: relative;
-  aspect-ratio: 1;
-  background: var(--surface);
-  overflow: hidden;
-}
-
-.nft-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s;
-}
-
-.nft-card:hover .nft-image-wrap img {
-  transform: scale(1.05);
-}
-
-.nft-no-image {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  font-size: 0.8rem;
-  font-family: "Noto Sans Lao";
-
-  background: linear-gradient(135deg, #16161f, #1a1a28);
-}
-
-.nft-no-image .icon {
-  font-size: 2.5rem;
-  margin-bottom: 8px;
-  opacity: 0.3;
-}
-
-.token-id-overlay {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--border);
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-family: "Noto Sans Lao";
-
-  font-size: 0.7rem;
-  color: var(--muted);
-}
-
-.nft-info {
-  padding: 1rem 1.2rem;
-}
-
-.nft-name {
-  font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.nft-collection {
-  font-size: 0.75rem;
-  color: var(--accent);
-  font-family: "Noto Sans Lao";
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.nft-desc {
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-top: 8px;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-#loading {
-  display: none;
-  text-align: center;
-  padding: 4rem;
-  animation: fadeUp 0.3s ease forwards;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-#loading p {
-  color: var(--muted);
-  font-family: "Noto Sans Lao";
-
-  font-size: 0.9rem;
-}
-
-#status {
-  text-align: center;
-  padding: 2rem;
-  font-family: "Noto Sans Lao";
-
-  font-size: 0.9rem;
-  color: var(--muted);
-  display: none;
-}
-
-#status.error {
-  color: var(--danger);
-}
-
-#modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  z-index: 200;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
-#modal.open {
-  display: flex;
-}
-
-.modal-inner {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  max-width: 600px;
-  width: 100%;
-  overflow: hidden;
-  animation: modalIn 0.3s ease;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-@keyframes modalIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.modal-img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-}
-
-.modal-body {
-  padding: 1.5rem 2rem 2rem;
-}
-
-.modal-name {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 0.3rem;
-}
-
-.modal-collection {
-  font-size: 0.85rem;
-  color: var(--accent);
-  font-family: "Noto Sans Lao";
-
-  margin-bottom: 1rem;
-}
-
-.modal-desc {
-  color: var(--muted);
-  line-height: 1.7;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-}
-
-.modal-attrs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.attr-tag {
-  background: rgba(124, 58, 237, 0.1);
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-family: "Noto Sans Lao";
-}
-
-.attr-tag span {
-  color: var(--muted);
-  display: block;
-  font-size: 0.65rem;
-  margin-bottom: 2px;
-}
-
-.modal-close {
-  background: var(--border);
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  color: var(--text);
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modal-close:hover {
-  background: var(--accent);
-}
-
+/* ==============================
+   No MetaMask
+   ============================== */
 #noMetamask {
   display: none;
   text-align: center;
@@ -782,32 +923,40 @@ header .logo span {
   color: var(--danger);
   margin-bottom: 0.5rem;
 }
-
 #noMetamask p {
   color: var(--muted);
   font-size: 0.9rem;
 }
-
 #noMetamask a {
   color: var(--accent);
 }
 
+/* ==============================
+   Responsive
+   ============================== */
 @media (max-width: 600px) {
   header {
     padding: 1rem;
   }
-
   .hero {
     padding: 3rem 1rem 2rem;
   }
-
   #walletInfo {
     margin: 1rem;
   }
-
   #nftGrid {
     padding: 0 1rem 3rem;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 1rem;
+  }
+  .verify-strip {
+    padding: 6px 0.8rem;
+    gap: 4px;
+  }
+  .meta-badge,
+  .verified-badge,
+  .etherscan-btn {
+    font-size: 0.58rem;
+    padding: 2px 6px;
   }
 }

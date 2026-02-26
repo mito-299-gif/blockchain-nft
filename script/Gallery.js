@@ -539,6 +539,25 @@ function openModal(nft) {
     attrsEl.appendChild(tag);
   });
 
+  // @show Contract Address
+  const ethEl = document.getElementById("modalEtherscan");
+  if (ethEl) {
+    const ethAddr = nft.contractAddress || LAB_CONTRACT_DEFAULT;
+    ethEl.textContent = `${ethAddr.slice(0, 10)}...${ethAddr.slice(-6)}`;
+    ethEl.title = ethAddr;
+    ethEl.href = `https://sepolia.etherscan.io/address/${ethAddr}`;
+    ethEl.target = "_blank";
+    ethEl.rel = "noopener noreferrer";
+  }
+
+  // @show Verification
+  const verifiedEl = document.getElementById("modalVerified");
+  if (verifiedEl) {
+    const netInfo = getNetworkInfo(currentChainId);
+    verifiedEl.textContent = `✔ contract Network: ${netInfo.name}`;
+    verifiedEl.style.color = "#22c55e";
+  }
+
   document.getElementById("modal").classList.add("open");
 }
 
