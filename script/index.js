@@ -470,7 +470,7 @@ function setMintStatus(type, msg = "") {
   if (type === "loading") {
     el.innerHTML =
       '<div class="spinner" style="width:28px;height:28px;border-width:2px"></div>' +
-      (msg || "กำลัง Mint...");
+      (msg || "ກຳລັງ Mint...");
     el.style.color = "var(--muted)";
   } else if (type === "success") {
     el.textContent = msg;
