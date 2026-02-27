@@ -101,6 +101,10 @@
                         <a id="modalEtherscan" href="#" target="_blank"
                             style="color:#a78bfa; font-family:'Space Mono',monospace; font-size:0.72rem;">—</a>
                     </div>
+                    <div class="modal-verify-row">
+                        <span class="vkey"> Token ID</span>
+                        <span id="modalTokenId">loading...</span>
+                    </div>
 
                 </div>
 

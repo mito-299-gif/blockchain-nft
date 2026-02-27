@@ -557,6 +557,11 @@ function openModal(nft) {
     verifiedEl.textContent = `✔ contract Network: ${netInfo.name}`;
     verifiedEl.style.color = "#22c55e";
   }
+  // @show Token ID
+  const tokenIdEL = document.getElementById("modalTokenId");
+  if (tokenIdEL) {
+    tokenIdEL.textContent = `${nft.tokenId}`;
+  }
 
   document.getElementById("modal").classList.add("open");
 }
